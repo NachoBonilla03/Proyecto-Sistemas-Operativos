@@ -5,9 +5,9 @@
 
 int main(){
     //This file  have the information of the CPU statistics 
-    File *fileCPU = fopen("/proc/stat", "r");
+    struct _IO_FILE *fileCPU = fopen("/proc/stat", "r");
     long totalUser, totalSys, totalIDLE, total;   
-    if(fileCPU==null){
+    if(fileCPU==NULL){
         perror("Error al acceder al  arcchivo de informacion del CPU"); 
         return EXIT_FAILURE; 
     }
@@ -18,7 +18,7 @@ int main(){
     flose(fileCPU); 
 
 //Calculating the usage percentage of the CPU
-    float CPUPercentage = (float) (totalUser+totalSys-totalIDLE)/(float)total; 
+    float CPUPercentage = (float) (totalUser+totalSys)/(float)total; 
     CPUPercentage *= 100; 
 
     
