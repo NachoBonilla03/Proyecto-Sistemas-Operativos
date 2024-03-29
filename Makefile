@@ -11,7 +11,7 @@ CC = gcc
 CFLAGS = -Wall #-Wextra
 
 # Archivos fuente
-SOURCES = main.c cpu_stats.c mem_stats.c disk_stats.c
+SOURCES = main.c cpu_stats.c mem_stats.c disk_stats.c 
 
 # Archivos objeto generados
 OBJECTS = $(SOURCES:.c=.o)
@@ -23,7 +23,8 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
 
 # Regla para construir archivos objeto
-%.o: %.c
+#%.o: 
+%.c:
 	$(CC) $(CFLAGS) -c $<
 
 # Regla para limpiar archivos generados
