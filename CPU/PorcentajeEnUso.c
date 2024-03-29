@@ -21,19 +21,16 @@ int main(){
 
     // Calculating the  CPU usage 
     //CPU usage
-    long total = info.loads[0] + info.loads[1] + info.loads[2] + info.loads[3];
+    long total = infoCPU.loads[0] + infoCPU.loads[1] + infoCPU.loads[2] + infoCPU.loads[3];
 
     //CPU IDLE 
-    long idle = info.loads[4];
+    long idle = infoCPU.loads[4];
 
     //Total usage - CPU  without usage / total time * 100 to get the percentage  of use
     double cpu_usage = ((double)total - (double)idle) / (double)total * 100.0;
 
     // Print CPU usage
     printf("CPU usage: %.2f%%\n", cpu_usage);
-
-    return EXIT_SUCCESS;
-
 
     return 0; 
 }
