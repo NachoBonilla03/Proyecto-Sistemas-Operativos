@@ -1,36 +1,29 @@
 #include<stdio.h>
 #include<stdlib.h> 
 #include<unistd.h> 
-#include<sys/sysinfo.h>
+
 
 int main(){
-    /*File *fp = fopen("/proc/stat", "r"); 
-    if(fp==null){
+    //This file  have the information of the CPU statistics 
+    File *fileCPU = fopen("/proc/stat", "r");
+    long totalUser, totalSys, totalIDLE, total;   
+    if(fileCPU==null){
         perror("Error al acceder al  arcchivo de informacion del CPU"); 
         return EXIT_FAILURE; 
-    }*/
-
-    //Trying option 2 
-    struct sysinfo infoCPU; 
-
-    //Access to the system info and load it to the infoCPU variable
-    if (sysinfo(&infoCPU) != 0) {
-        perror("sysinfo failed");
-        exit(EXIT_FAILURE);
     }
 
-    // Calculating the  CPU usage 
-    //CPU usage
-    long total = infoCPU.loads[0] + infoCPU.loads[1] + infoCPU.loads[2] + infoCPU.loads[3];
+    //Reading the first line in the /proc/start and keep the information in the variables 
+    fscanf(fileCPU, "cpu %ld %ld %ld %ld", &totalUser, &totalSys, &totalIDLE, &total); 
 
-    //CPU IDLE 
-    long idle = infoCPU.loads[4];
+    flose(fileCPU); 
 
-    //Total usage - CPU  without usage / total time * 100 to get the percentage  of use
-    double cpu_usage = ((double)total - (double)idle) / (double)total * 100.0;
+//Calculating the usage percentage of the CPU
+    float CPUPercentage = (float) (totalUser+totalSys-totalIDLE)/(float)total; 
+    CPUPercentage *= 100; 
 
+    
     // Print CPU usage
-    printf("CPU usage: %.2f%%\n", cpu_usage);
+    printf("CPU usage: %.2f%%\n", CPUPercentage);
 
     return 0; 
 }
