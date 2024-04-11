@@ -1,30 +1,44 @@
 #include <stdio.h>
-#include <sys/statvfs.h>
+#include <stdlib.h>
+#include <string.h>
 
-double obtener_porcentaje_utilizado(const char *path);
+#define DISKSTATS_FILE "/proc/diskstats"
+
+double obtener_porcentaje_ocupado(const char *device);
 
 int main() {
-    const char *path = "/";  // Puedes cambiar esto según la partición que quieras verificar
+    const char *device = "sda";  // Puedes cambiar esto según el dispositivo que quieras verificar
 
-    double porcentaje_utilizado = obtener_porcentaje_utilizado(path);
+    double porcentaje_ocupado = obtener_porcentaje_ocupado(device);
 
-    if (porcentaje_utilizado >= 0) {
-        printf("Porcentaje utilizado de disco: %.2f%%\n", porcentaje_utilizado);
+    if (porcentaje_ocupado >= 0) {
+        printf("Porcentaje ocupado de disco para %s: %.2f%%\n", device, porcentaje_ocupado);
     }
 
     return 0;
 }
 
-
-double obtener_porcentaje_utilizado(const char *path) {
-    struct statvfs stat;
-    
-    if (statvfs(path, &stat) != 0) {
-        perror("Error al obtener el estado del sistema de archivos");
+double obtener_porcentaje_ocupado(const char *device) {
+    FILE *pipe = popen("cat " DISKSTATS_FILE, "r");
+    if (pipe == NULL) {
+        perror("Error al abrir el pipe");
         return -1;
     }
-    
-    double porcentaje_utilizado = 100.0 - (((double)stat.f_bfree / (double)stat.f_blocks) * 100.0);
-    
-    return porcentaje_utilizado;
+
+    char line[256];
+    while (fgets(line, sizeof(line), pipe) != NULL) {
+        char dev[32];
+        unsigned long long reads, writes, sectorsRead, sectorsWritten;
+        sscanf(line, "%*d %*d %s %llu %*d %llu %llu", dev, &reads, &sectorsRead, &sectorsWritten);
+        if (strcmp(dev, device) == 0) {
+            double totalSectors = sectorsRead + sectorsWritten;
+            double usedSectors = sectorsWritten;  // Cantidad de sectores escritos
+            double porcentaje_ocupado = (usedSectors / totalSectors) * 100.0;
+            pclose(pipe);
+            return porcentaje_ocupado;
+        }
+    }
+
+    pclose(pipe);
+    return -1;
 }
