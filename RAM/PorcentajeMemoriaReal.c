@@ -1,61 +1,71 @@
 
-#include <stdio.h>
+lude <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 int main() {
-    // This file has the information of the total available memory
-    struct _IO_FILE *fileMemInfo = fopen("/proc/meminfo", "r");
-    unsigned long totalMem;
-    if (fileMemInfo == NULL) {
-        perror("Error al acceder al archivo de informacion de la memoria");
-        return EXIT_FAILURE;
+    int fd;
+    char buf[4096];
+    ssize_t n;
+    long size;
+    long total_mem;
+
+    // Open /proc/meminfo
+    fd = open("/proc/meminfo", O_RDONLY);
+    if (fd == -1) {
+        perror("open");
+        exit(1);
     }
 
-    // Read the total available memory
-    fscanf(fileMemInfo, "MemTotal: %lu kB\n", &totalMem);
-    fclose(fileMemInfo);
-
-    // Open the /proc folder
-    DIR *procDir = opendir("/proc");
-    if (procDir == NULL) {
-        perror("Error al abrir el directorio /proc");
-        return EXIT_FAILURE;
+    // Read the contents of /proc/meminfo
+    n = read(fd, buf, sizeof(buf));
+    if (n == -1) {
+        perror("read");
+        exit(1);
     }
 
-    // Iterate through all the processes
-    struct dirent *entry;
-    while ((entry = readdir(procDir)) != NULL) {
-        // Skip non-process entries
-        if (entry->d_type != DT_DIR || strchr("0123456789", entry->d_name[0]) == NULL) {
+    close(fd);
+
+    // Parse the MemTotal line
+    if (sscanf(buf, "MemTotal: %ld kB", &total_mem)!= 1) {
+        fprintf(stderr, "Invalid format\n");
+        exit(1);
+    }
+
+    // Print the size of the RAM
+    printf("Size of the RAM: %ld KB\n", total_mem);
+
+    for (int i = 1; i < 65536; i++) {
+        snprintf(buf, sizeof(buf), "/proc/%d/statm", i);
+        fd = open(buf, O_RDONLY);
+        if (fd == -1) {
             continue;
         }
 
-        // Read the process status
-        char path[256];
-        snprintf(path, sizeof(path), "/proc/%s/status", entry->d_name);
-        struct _IO_FILE *fileStatus = fopen(path, "r");
-        if (fileStatus == NULL) {
-            perror("Error al acceder al archivo de informacion del proceso");
-            continue;
+        n = read(fd, buf, sizeof(buf));
+        if (n == -1) {
+            perror("read");
+            exit(1);
         }
 
-        unsigned long vsize;
-        unsigned long rss;
-        char state;
-        fscanf(fileStatus, "VmSize: %lu kB\nRss: %lu kB\nState: %c", &vsize, &rss, &state);
-        fclose(fileStatus);
+        close(fd);
 
-        // Calculate the process real RAM usage
-        double processRAM = (double)rss / (double)totalMem * 100;
+        if (sscanf(buf, "%ld ", &size)!= 1) {
+            fprintf(stderr, "Invalid format\n");
+            exit(1);
+        }
 
-        // Print the process PID and RAM usage
-        printf("PID: %s, RAM Usage: %.2f%%\n", entry->d_name, processRAM);
+        // Calculate the memory usage in KB
+        long mem_usage_kb = size * 4;
+
+        // Calculate the percentage of memory usage
+        double mem_usage_percent = (mem_usage_kb * 100.0) / total_mem;
+
+        printf("Memory usage of process %d: %ld pages, which is %ld KB, which is %.2f%% of the total memory\n", i, size, mem_usage_kb, mem_usage_percent);
     }
 
-    closedir(procDir);
     return 0;
 }
