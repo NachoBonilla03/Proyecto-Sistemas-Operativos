@@ -8,7 +8,7 @@
 // se espera que esta longitud sea suficiente para manejar la mayoría 
 // de las líneas de texto que se encuentran en estos archivos sin problemas de rendimiento o consumo excesivo de memoria.
 
-void obtener_stat(int pid, unsigned long *utime, unsigned long *stime) {
+void obtener_stat(int pid, unsigned long *utime, unsigned long *stime, char *nombre) {
     FILE *archivo;
     char ruta[MAX_LINE_LENGTH];
     char linea[MAX_LINE_LENGTH];
@@ -38,7 +38,9 @@ void obtener_stat(int pid, unsigned long *utime, unsigned long *stime) {
     fclose(archivo);
 
     // Analizar la línea para extraer los tiempos de CPU
-    sscanf(linea, "%*d %*s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %lu %lu", &u, &s);
+    sscanf(linea, "%*d %s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %lu %lu", nombre, &u, &s);
+    // los valores que nos interesan aca son: utime (unsigned long): Tiempo de CPU del modo de usuario.
+    //stime (unsigned long): Tiempo de CPU del modo del kernel.
 
     // Asignar los tiempos de CPU a las variables correspondientes
     *utime = u;
@@ -49,6 +51,7 @@ int main() {
     int pid;
     unsigned long utime_start, stime_start, utime_end, stime_end;
     float cpu_percent;
+    char nombre[MAX_LINE_LENGTH];
 
     // Solicitar al usuario que ingrese el PID del proceso deseado
     printf("Ingrese el PID del proceso deseado: ");
@@ -60,13 +63,13 @@ int main() {
     // Realizar mediciones durante 5 minutos
     for (int i = 0; i < 5; ++i) {
         // Obtener los tiempos de CPU al inicio del intervalo de tiempo
-        obtener_stat(pid, &utime_start, &stime_start);
+        obtener_stat(pid, &utime_start, &stime_start, nombre);
 
         // Esperar 1 minuto
         sleep(60);
 
         // Obtener los tiempos de CPU al final del intervalo de tiempo
-        obtener_stat(pid, &utime_end, &stime_end);
+        obtener_stat(pid, &utime_end, &stime_end, nombre);
 
         // Calcular el tiempo total de CPU utilizado durante el intervalo de tiempo
         unsigned long total_time = utime_end + stime_end - utime_start - stime_start;
@@ -88,18 +91,111 @@ int main() {
         total_cpu_percent += cpu_percent;
 
         // Imprimir el porcentaje de utilización de CPU durante el intervalo de tiempo actual
-        printf("Porcentaje de utilización de CPU en el minuto %d: %.2f%%\n", i+1, cpu_percent);
+        printf("Porcentaje de utilización de CPU del proceso %s con PID: %d en el minuto %d: %.2f%%\n", nombre, pid, i+1, cpu_percent);
     }
 
     // Calcular el promedio del porcentaje de utilización de CPU durante los 5 minutos
     float promedio_cpu_percent = total_cpu_percent / 5.0;
 
     // Imprimir el promedio del porcentaje de utilización de CPU
-    printf("Promedio de utilización de CPU en los últimos 5 minutos: %.2f%%\n", promedio_cpu_percent);
+    printf("Promedio de utilización de CPU del proceso %s con PID: %d en los últimos 5 minutos: %.2f%%\n", nombre, pid, promedio_cpu_percent);
 
     return 0;
 }
 
+
+/*
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX_LINE_LENGTH 256 
+
+void obtener_stat(int pid, unsigned long *utime, unsigned long *stime, char *nombre) {
+    FILE *archivo;
+    char ruta[MAX_LINE_LENGTH];
+    char linea[MAX_LINE_LENGTH];
+    unsigned long u, s;
+
+    // Construir la ruta al archivo stat
+    sprintf(ruta, "/proc/%d/stat", pid);
+
+    // Abrir el archivo
+    archivo = fopen(ruta, "r");  
+    if (archivo == NULL) {
+        perror("Error al abrir el archivo");
+        exit(EXIT_FAILURE);
+    }
+
+    // Leer la primera línea del archivo
+    if (fgets(linea, MAX_LINE_LENGTH, archivo) == NULL) {
+        perror("Error al leer el archivo");
+        exit(EXIT_FAILURE);
+    }
+
+    // Cerrar el archivo
+    fclose(archivo);
+
+    // Analizar la línea para extraer los tiempos de CPU y el nombre del proceso
+    sscanf(linea, "%*d %s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %lu %lu", nombre, &u, &s);
+
+    // Asignar los tiempos de CPU a las variables correspondientes
+    *utime = u;
+    *stime = s;
+}
+
+int main() {
+    int pid;
+    unsigned long utime_start, stime_start, utime_end, stime_end;
+    float cpu_percent;
+    char nombre[MAX_LINE_LENGTH];
+
+    // Solicitar al usuario que ingrese el PID del proceso deseado
+    printf("Ingrese el PID del proceso deseado: ");
+    scanf("%d", &pid);
+
+    // Inicializar variables para el promedio
+    float total_cpu_percent = 0.0;
+
+    // Realizar mediciones durante 5 minutos
+    for (int i = 0; i < 5; ++i) {
+        // Obtener los tiempos de CPU al inicio del intervalo de tiempo
+        obtener_stat(pid, &utime_start, &stime_start, nombre);
+
+        // Esperar 1 minuto
+        sleep(60);
+
+        // Obtener los tiempos de CPU al final del intervalo de tiempo
+        obtener_stat(pid, &utime_end, &stime_end, nombre);
+
+        // Calcular el tiempo total de CPU utilizado durante el intervalo de tiempo
+        unsigned long total_time = utime_end + stime_end - utime_start - stime_start;
+
+        // Calcular el tiempo transcurrido durante el intervalo de tiempo
+        unsigned long elapsed_time = 60 * sysconf(_SC_CLK_TCK); 
+
+        // Calcular el porcentaje de utilización de CPU durante el intervalo de tiempo
+        cpu_percent = ((float)total_time / elapsed_time) * 100;  
+
+        // Acumular el porcentaje de utilización de CPU para calcular el promedio
+        total_cpu_percent += cpu_percent;
+
+        // Imprimir el porcentaje de utilización de CPU y el nombre del proceso durante el intervalo de tiempo actual
+        printf("Porcentaje de utilización de CPU del proceso %s en el minuto %d: %.2f%%\n", nombre, i+1, cpu_percent);
+    }
+
+    // Calcular el promedio del porcentaje de utilización de CPU durante los 5 minutos
+    float promedio_cpu_percent = total_cpu_percent / 5.0;
+
+    // Imprimir el promedio del porcentaje de utilización de CPU
+    printf("Promedio de utilización de CPU del proceso %s en los últimos 5 minutos: %.2f%%\n", nombre, promedio_cpu_percent);
+
+    return 0;
+}
+
+*/
 
 
 

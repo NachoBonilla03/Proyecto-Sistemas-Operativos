@@ -15,7 +15,7 @@ int main(){
     //Reading the first line in the /proc/start and keep the information in the variables 
     fscanf(fileCPU, "cpu %ld %ld %ld %ld", &totalUser, &totalSys, &totalIDLE, &total); 
 
-    flose(fileCPU); 
+    fclose(fileCPU); 
 
 //Calculating the usage percentage of the CPU
     float CPUPercentage = (float) (totalUser+totalSys)/(float)total; 
