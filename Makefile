@@ -8,7 +8,7 @@ TARGET = monitor_recursos
 CC = gcc
 
 # Opciones del compilador
-CFLAGS = -Wall #-Wextra
+CFLAGS = -Wall -Werror#-Wextra
 
 # Archivos fuente
 SOURCES = main.c cpu_stats.c mem_stats.c disk_stats.c 
