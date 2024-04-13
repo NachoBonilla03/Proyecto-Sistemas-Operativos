@@ -4,8 +4,18 @@
 
 #define DISKSTATS_FILE "/proc/diskstats"
 
-double obtener_porcentaje_ocupado(const char *device);
+//double obtener_porcentaje_ocupado(const char *device);
 
+int main() {
+    execlp("/bin/sh", "sh", "-c", "df -BM --output=source,size,used,pcent", NULL);
+
+    return 0;
+}
+
+
+
+
+/*
 int main() {
     const char *device = "sda";  // Puedes cambiar esto según el dispositivo que quieras verificar
 
@@ -42,3 +52,4 @@ double obtener_porcentaje_ocupado(const char *device) {
     pclose(pipe);
     return -1;
 }
+*/ 
