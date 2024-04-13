@@ -1,29 +1,43 @@
 
+/*
+comando ps aux 
+%MEM: El porcentaje de memoria física que el proceso está utilizando.
+Las columnas que retorna el comando ps aux en un sistema operativo Linux contienen información detallada sobre cada proceso en ejecución. A continuación, se describe el significado de cada columna:
+
+USER: El usuario propietario del proceso.
+
+PID: El identificador único del proceso (Process ID).
+
+%CPU: El porcentaje de tiempo de CPU que el proceso ha estado utilizando desde su inicio.
+
+%MEM: El porcentaje de memoria física que el proceso está utilizando.
+
+VSZ: El tamaño de la memoria virtual del proceso, medida en kilobytes (KiB). Esta columna muestra la cantidad total de memoria virtual que el proceso ha asignado, incluyendo tanto la memoria residente como la memoria swapeada.
+
+RSS: El tamaño de la memoria residente del proceso, medida en kilobytes (KiB). Esta columna muestra la cantidad de memoria física que el proceso está utilizando actualmente.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
   FILE *fp;
   char line[1024];
-  char pid[10], cmd[1024];
-  int* user, pid_num; 
+  int pid;
+  double mem;
 
-  // Execute the ps command and get its output
-  fp = popen("ps aux", "r");
+  // Execute the ps aux command and get its output
+  fp = popen("ps aux --sort -%mem", "r");
   if (fp == NULL) {
     printf("Error: popen failed\n");
     return 1;
   }
 
-  // Parse the output and extract the PID and command columns
+  // Parse the output and extract the PID and %MEM columns
   while (fgets(line, sizeof(line), fp) != NULL) {
-    // Extract the PID column
-    sscanf(line, "%s %s", pid, cmd);
-    printf("%s ", pid);
-
-    // Extract the command column
-   	sscanf(line, "%s %s %s %*s %*s %*s %*s %*s %*s %*s %*s %*s %*s %d", pid, user, cmd);
-	printf("%s %s %d\n", pid, user, pid_num);
+    if (sscanf(line, "%*s %d %*s %lf", &pid, &mem) == 2) {
+      printf("PID: %d, MEM: %.2f%%\n", pid, mem);
+    }
   }
 
   // Close the pipe
@@ -31,4 +45,3 @@ int main() {
 
   return 0;
 }
-
