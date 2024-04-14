@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(argc == 2){
-        if(strcmp(argv[1], "cpu")==0){  // strcmp() Para comparar cadenas en C. La función strcmp() devuelve 0 cuando las dos cadenas son iguales.
+         // strcmp() Para comparar cadenas en C. La función strcmp() devuelve 0 cuando las dos cadenas son iguales.
             //This file  have the information of the CPU statistics 
             struct _IO_FILE *fileCPU = fopen("/proc/stat", "r");
             long totalUser, totalSys, totalIDLE, total;   
@@ -76,11 +76,11 @@ int main(int argc, char *argv[]) {
     
             // Print CPU usage
             printf("CPU usage: %.2f%%\n", CPUPercentage);
-        }
+        
     }
 
     if(argc == 3){
-        if(strcmp(argv[1], "cpu")==0){
+        
             // Obtener el PID del proceso
             int pid = atoi(argv[2]);
             unsigned long utime_start, stime_start, utime_end, stime_end;
@@ -130,7 +130,7 @@ int main(int argc, char *argv[]) {
             // Imprimir el promedio del porcentaje de utilización de CPU
             printf("Promedio de utilización de CPU del proceso %s con PID: %d en los últimos 5 minutos: %.2f%%\n", nombre, pid, promedio_cpu_percent);
 
-        }
+        
     }
 
     return 0;
