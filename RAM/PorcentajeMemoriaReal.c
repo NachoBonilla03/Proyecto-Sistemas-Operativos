@@ -26,6 +26,7 @@ int main() {
   int pid;
   double mem;
 
+
   // Execute the ps aux command and get its output
   fp = popen("ps aux --sort -%mem", "r");
   if (fp == NULL) {
