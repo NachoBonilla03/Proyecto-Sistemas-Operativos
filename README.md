@@ -29,5 +29,6 @@ Posterior a esto ejecute el comando ./main con alguna de las siguientes opciones
   - Ingrese "./main -R -MV <PID>" para mostrar el porcentaje de uso de memoria virtual  de un proceso determinado
 
 * Monitoreo de Disco
-  - Ingrese "./main -D -U" para mostrar el porcentaje de disco en uso 
-  - Ingrese "./main -D -L" para mostrar el porcentaje de disco disponible 
+- Ingrese "./main -D -U" para mostrar el porcentaje de disco en uso 
+- Ingrese "./main -D -L" para mostrar el porcentaje de disco disponible 
+
