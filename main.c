@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
   int pipefd[2];
-  char buffer[1024];
+  char buffer[9000];
   int bytesLeidos;
   pipe(pipefd);
   pid_t pid = fork();
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 	   } 
 	  else {
 	    close(pipefd[1]); // Cerrar extremo de escritura
-	    while ((bytesLeidos = read(pipefd[0], buffer[9000], sizeof(buffer))) > 0) {
+	    while ((bytesLeidos = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
 	      write(1, buffer, bytesLeidos); // Imprimir la salida en la consola
 	    }
 	    close(pipefd[0]); // Cerrar extremo de lectura
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 	   } 
 	  else {
 	    close(pipefd[1]); // Cerrar extremo de escritura
-	    while ((bytesLeidos = read(pipefd[0], buffer[9000], sizeof(buffer))) > 0) {
+	    while ((bytesLeidos = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
 	      write(1, buffer, bytesLeidos); // Imprimir la salida en la consola
 	    }
 	    close(pipefd[0]); // Cerrar extremo de lectura
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 	   } 
 	  else {
 	    close(pipefd[1]); // Cerrar extremo de escritura
-	    while ((bytesLeidos = read(pipefd[0], buffer[9000], sizeof(buffer))) > 0) {
+	    while ((bytesLeidos = read(pipefd[0], buffer, sizeof(buffer))) > 0) {
 	      write(1, buffer, bytesLeidos); // Imprimir la salida en la consola
 	    }
 	    close(pipefd[0]); // Cerrar extremo de lectura
