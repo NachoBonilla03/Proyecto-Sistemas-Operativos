@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 
 
 if (argc> 3 || argc<2) {
-        printf("Cantidad de argumentos invalida\n");
+        printf("Cantidad de argumentos invalida, la forma de uso es ./main -R <-MR/-MV> <pid>\n");
 } 
  
 if(strcmp(argv[1], "-MR")==0){
@@ -25,7 +25,7 @@ if(strcmp(argv[1], "-MR")==0){
 	  // Parse the output and extract the PID and %MEM columns
 	  while (fgets(line, sizeof(line), fp) != NULL) {
 	    if (sscanf(line, "%*s %d %*s %lf", &pid, &mem) == 2) {
-	      printf("PID: %d, MEM: %.2f%%\n", pid, mem);
+	      printf("PID: %d, RAM Real: %.2f%%\n", pid, mem);
 	    }
 	  }
 	  // Close the pipe
@@ -38,7 +38,7 @@ if(strcmp(argv[1], "-MR")==0){
 	  while (fgets(line, sizeof(line), fp) != NULL) {
 	    if (sscanf(line, "%*s %d %*s %lf", &pid, &mem) == 2) {
 	    if(arg_pid ==pid){
-	      printf("PID: %d, MEM: %.2f%%\n", pid, mem);
+	      printf("PID: %d, RAM Real: %.2f%%\n", pid, mem);
 	      }
 	    }
 	  }
@@ -62,7 +62,7 @@ if(strcmp(argv[1], "-MV")==0){
       memtot += mem;  // sumar el valor de mem a memtot
     }
   }
-  printf("Total VSZ: %d\n", memtot);
+  printf("RAM virtual total: %d kilobytes\n", memtot);
   // Reset the file pointer to the beginning of the output
   pclose(fp);
   
@@ -77,7 +77,7 @@ if(strcmp(argv[1], "-MV")==0){
   while (fgets(line, sizeof(line), fp) != NULL) {
     if (sscanf(line, "%d %d", &pid, &mem) == 2) {
       double memaux = (mem * 100.0) / memtot;  // calcular el porcentaje de memoria virtual utilizado por cada proceso
-      printf("PID: %d, MEM virtual: %.2f%%\n", pid, memaux);
+      printf("PID: %d, RAM virtual: %.2f%%\n", pid, memaux);
     }
   }
   // Close the pipe
@@ -90,7 +90,7 @@ if(strcmp(argv[1], "-MV")==0){
     if (sscanf(line, "%d %d", &pid, &mem) == 2) {
     	if(pid==arg_pid){
       double memaux = (mem * 100.0) / memtot;  // calcular el porcentaje de memoria virtual utilizado por cada proceso
-      printf("PID: %d, MEM virtual: %.2f%%\n", pid, memaux);
+      printf("PID: %d, RAM virtual: %.2f%%\n", pid, memaux);
       }
     }
   }
