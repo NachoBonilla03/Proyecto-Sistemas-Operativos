@@ -78,7 +78,7 @@ if(strcmp(argv[1], "-MV")==0){
   while (fgets(line, sizeof(line), fp) != NULL) {
     if (sscanf(line, "%d %d", &pid, &mem) == 2) {
       double memaux = (mem * 100.0) / memtot;  // calcular el porcentaje de memoria virtual utilizado por cada proceso
-      printf("PID: %d, RAM virtual: %.2f%%\n", pid, memaux);
+      printf("PID: %d, RAM virtual: %d kilobytes Porcentaje: %.2f%%\n", pid, mem, memaux);
     }
   }
   // Close the pipe
@@ -91,7 +91,7 @@ if(strcmp(argv[1], "-MV")==0){
     if (sscanf(line, "%d %d", &pid, &mem) == 2) {
     	if(pid==arg_pid){
       double memaux = (mem * 100.0) / memtot;  // calcular el porcentaje de memoria virtual utilizado por cada proceso
-      printf("PID: %d, RAM virtual: %.2f%%\n", pid, memaux);
+       printf("PID: %d, RAM virtual: %d kilobytes Porcentaje: %.2f%%\n", pid, mem, memaux);
       }
     }
   }
