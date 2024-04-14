@@ -41,6 +41,7 @@ void obtener_stat(int pid, unsigned long *utime, unsigned long *stime, char *nom
     sscanf(linea, "%*d %s %*c %*d %*d %*d %*d %*d %*u %*u %*u %*u %lu %lu", nombre, &u, &s);
     // los valores que nos interesan aca son: utime (unsigned long): Tiempo de CPU del modo de usuario.
     //stime (unsigned long): Tiempo de CPU del modo del kernel.
+    //nombre del proceso...
 
     // Asignar los tiempos de CPU a las variables correspondientes
     *utime = u;

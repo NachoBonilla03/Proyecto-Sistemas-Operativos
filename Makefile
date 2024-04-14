@@ -1,14 +1,11 @@
 # Ignacio Bonilla Rojas
 # Marcos Vásquez Díaz
 
-# Nombre del programa
-TARGET = mmmm
-
 # Compilador a utilizar
 CC = gcc
 
 # Opciones del compilador
-# CFLAGS = -Wall -Werror
+CFLAGS = -Wall -Werror
 
 # Archivos fuente
 SOURCES = prueba.c disco.c RAM.c cpu.c main.c
@@ -17,17 +14,12 @@ SOURCES = prueba.c disco.c RAM.c cpu.c main.c
 OBJECTS = $(SOURCES:.c=)
 
 # Regla principal  
-all: $(TARGET)
-
-# $(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
-$(TARGET): $(OBJECTS)
-	$(CC) $(TARGET) -o $(OBJECTS)
+all: $(OBJECTS)
 
 # Regla para construir archivos objeto $(CC) $(CFLAGS) -c $< -o $@
 %.o: %.c
-	$(CC) $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Regla para limpiar archivos generados
 clean:
-	rm -f $(OBJECTS) $(TARGET)
-
+	rm -f $(OBJECTS)
