@@ -11,8 +11,10 @@ void obtener_porcentaje_libre_todos();
 #include <unistd.h>
 
 int main() {
-    execlp("/bin/sh", "sh", "-c", "df -BM | awk 'BEGIN {print \"Filesystem|Used|Available|Use%\"} NR!=1 {print $1 \"|\" $3 \" MiB|\" $4 \" MiB|\" $5}'", NULL);
 
+    execlp("/bin/sh", "sh", "-c", "df -BM | awk 'BEGIN {print \"Filesystem|Size|Used|Available%\"} NR!=1 {print $1 \"|\" $2 \"|\" $3 \"|\" 100 - substr($5, 1, length($5)-1) \"%\"}'", NULL);
+    // toma una subcadena del campo $5, comenzando desde el primer carácter (1) hasta el penúltimo (length($5)-1). 
+    //Esto se hace para eliminar el signo de porcentaje al final del valor, y por último restamos 100 a ese resultado.
     return 0;
 }
 
