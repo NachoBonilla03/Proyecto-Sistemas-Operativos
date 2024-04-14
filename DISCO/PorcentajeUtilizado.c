@@ -7,7 +7,8 @@
 //double obtener_porcentaje_ocupado(const char *device);
 
 int main() {
-    execlp("/bin/sh", "sh", "-c", "df -BM --output=source,size,used,pcent", NULL);
+    execlp("/bin/sh", "sh", "-c", "df -BM | awk 'BEGIN {print \"FileSystem|Size|Used|Use%\"} NR!=1 {print $1 \"|\" $2 \"|\" $3 \"|\" $5}'", NULL);
+
 
     return 0;
 }

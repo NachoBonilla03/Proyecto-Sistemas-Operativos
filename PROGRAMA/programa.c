@@ -1,3 +1,6 @@
+// Ignacio Bonilla Rojas
+// Marcos Vásquez Díaz
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,15 +50,18 @@ void obtener_stat(int pid, unsigned long *utime, unsigned long *stime, char *nom
     *stime = s;
 }
 
-int main() {
-    int pid;
+int main(int argc, char *argv[]) {
+
+    if (argc != 2) {
+        printf("Cantidad de argumentos invalida, recuerde que es ./prog <PID>\n");
+        return EXIT_FAILURE;
+    }
+    // Obtener el PID del proceso
+    int pid = atoi(argv[1]);
     unsigned long utime_start, stime_start, utime_end, stime_end;
     float cpu_percent;
     char nombre[MAX_LINE_LENGTH];
 
-    // Solicitar al usuario que ingrese el PID del proceso deseado
-    printf("Ingrese el PID del proceso deseado: ");
-    scanf("%d", &pid);
 
     // Inicializar variables para el promedio
     float total_cpu_percent = 0.0;
