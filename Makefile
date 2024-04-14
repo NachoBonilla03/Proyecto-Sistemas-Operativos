@@ -11,7 +11,7 @@ CC = gcc
 # CFLAGS = -Wall -Werror
 
 # Archivos fuente
-SOURCES = cpu.c disco.c RAM.c main.c
+SOURCES = prueba.c disco.c RAM.c cpu.c main.c
 
 # Archivos objeto generados
 OBJECTS = $(SOURCES:.c=)

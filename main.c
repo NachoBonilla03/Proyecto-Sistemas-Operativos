@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 	  if (pid == 0) {
 	    // Proceso hijo
 	    close(pipefd[0]); // Cerrar extremo de lectura
-	    execl("./cpu","cpu",  argv[2]);
+	    execl("./cpu","cpu",  argv[2], argv[3]);
 	    exit(1);
 	   } 
 	  else {
