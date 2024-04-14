@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     }
 
     if(strcmp(argv[1], "-U")==0){  // strcmp() Para comparar cadenas en C. La función strcmp() devuelve 0 cuando las dos cadenas son iguales.
-        execlp("/bin/sh", "sh", "-c", "df -BM | awk 'BEGIN {print \"FileSystem|Size|Used|Use%\"} NR!=1 {print $1 \"|\" $2 \"|\" $3 \"|\" $5}'", NULL);
+        execlp("/bin/sh", "sh", "-c", "df -BM | awk 'BEGIN {print \"FileSystem|Size|Used|Use%\"} NR!=1 {print $1\"|\" $2 \"|\" $3 \"|\" $5}'", NULL);
 
     }
 
