@@ -11,7 +11,7 @@ CC = gcc
 # CFLAGS = -Wall -Werror
 
 # Archivos fuente
-SOURCES = programa.c disco.c PorcentajeEnUso.c PorcentajeMemoriaReal.c PorcentajeMemoriaVirtual.c
+SOURCES = cpu.c disco.c
 
 # Archivos objeto generados
 OBJECTS = $(SOURCES:.c=.o)
