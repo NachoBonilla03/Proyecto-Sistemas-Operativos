@@ -20,13 +20,13 @@ Posterior a esto ejecute el comando ./main con alguna de las siguientes opciones
 
 * Monitoreo de CPU
   - Ingrese "./main  -C cpu" para mostrar el porcentaje de utilizacion del CPU.
-  - Ingrese "./main -C cpu <PID>" para mostrar el porcentaje de utilizacion de CPU de un determinado  proceso en los proximos 5 mins
+  - Ingrese "./main -C cpu PID" para mostrar el porcentaje de utilizacion de CPU de un determinado  proceso en los proximos 5 mins
 
 * Monitoreo de RAM
   - Ingrese "./main -R -MR" para mostrar el porcentaje de uso de memoria real de todos los procesos en el sistema
   - Ingrese "./main -R -MV" para mostrar el porccentaje de uso de memoria virtual de todos los procesos en el sistema 
-  - Ingrese "./main -R -MR <PID>" para mostrar el porcentaje de uso de memoria real de un proceso determinado
-  - Ingrese "./main -R -MV <PID>" para mostrar el porcentaje de uso de memoria virtual  de un proceso determinado
+  - Ingrese "./main -R -MR PID" para mostrar el porcentaje de uso de memoria real de un proceso determinado
+  - Ingrese "./main -R -MV PID" para mostrar el porcentaje de uso de memoria virtual  de un proceso determinado
 
 * Monitoreo de Disco
   - Ingrese "./main -D -U" para mostrar el porcentaje de disco en uso 
