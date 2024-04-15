@@ -15,7 +15,7 @@
 * Porcenajte utilizado del disco duro
 
 # Manual de uso
-Para poder comenzar a utilizar el sistema de monitoreo, ejecute el comando make 
+Para poder comenzar a utilizar el sistema de monitoreo, ejecute el comando make, el make se debe ejecutar encontrandose en la carpeta principal del proyecto (en las carpetas CPU FOLDER, DISCO, PROGRAMA y RAM FOLDER se encuentran fragmentos del codigo principal usados para pruebas, por lo que no son relevantes). 
 Posterior a esto ejecute el comando ./main con alguna de las siguientes opciones: 
 
 * Monitoreo de CPU
@@ -29,6 +29,6 @@ Posterior a esto ejecute el comando ./main con alguna de las siguientes opciones
   - Ingrese "./main -R -MV <PID>" para mostrar el porcentaje de uso de memoria virtual  de un proceso determinado
 
 * Monitoreo de Disco
-- Ingrese "./main -D -U" para mostrar el porcentaje de disco en uso 
-- Ingrese "./main -D -L" para mostrar el porcentaje de disco disponible 
+  - Ingrese "./main -D -U" para mostrar el porcentaje de disco en uso 
+  - Ingrese "./main -D -L" para mostrar el porcentaje de disco disponible 
 
